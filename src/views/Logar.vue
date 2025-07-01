@@ -1,57 +1,43 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-interface LoginDto {
-  email: string;
-  senha: string;
-}
+import useLogin from "../services/useLogin";
+import type { LoginDto } from "../interfaces/LoginDto";
+import { useRouter } from "vue-router";
+
 const form = ref();
-const formData = reactive({ email: "", senha: "" });
+const router = useRouter();
+const formData = reactive<LoginDto>({ username: "", senha: "" });
 
 const loading = ref(false);
+const hideSenha = ref(false);
 
-function onSubmit() {
+async function onSubmit() {
   if (!form.value) return;
 
-  console.log(formData);
+  try {
+    await useLogin(formData);
+
+    alert("login feito com sucesso");
+    router.push("/home");
+  } catch (e: any) {
+    alert(e.response.data.message);
+  }
 }
 function required(v: any) {
   return !!v || "Campo obrigatório";
 }
 </script>
 <template>
-  <!-- <v-container fluid class="container">
-        <v-row no-gutters>
-            <v-col cols="6" v-for="n in 2" :key="n">
-                <span>fala zeze loga ai</span>
-            </v-col>
-            <v-col cols="2" v-for="n in 6" :key="n">
-                <span>fala zeze loga ai</span>
-            </v-col>
-        </v-row>
-    </v-container> -->
-
-  <!-- <v-form id="form" class="bg-primary">
-        <h1>Login</h1>
-        <v-text-field :counter="10" label="First name" required></v-text-field>
-        <v-text-field :counter="10" label="First name" required></v-text-field>
-
-        <v-btn>logar</v-btn>
-    </v-form> -->
-
   <v-container id="container">
     <v-row no-gutters>
       <v-col cols="4" style="margin: auto">
         <v-card>
           <v-form id="form" v-model="form" @submit.prevent="onSubmit">
             <h1>Login</h1>
-
-            <!-- <Input label="Email" value="email" required/>
-            <Input label="Senha" value="senha" required/> -->
-
             <v-text-field
-              v-model="formData.email"
-              label="Email"
-              name="email"
+              v-model="formData.username"
+              label="Email/username"
+              name="username"
               :readonly="loading"
               :rules="[required]"
               required
@@ -60,12 +46,23 @@ function required(v: any) {
               v-model="formData.senha"
               label="Senha"
               name="senha"
+              :type="hideSenha ? 'text': 'password'"
               :readonly="loading"
               :rules="[required]"
               required
-            ></v-text-field>
+              style="padding: 0;"
+            >
+              <template #append-inner>
+                <v-icon
+                  @click="hideSenha = !hideSenha"
+                  class="cursor-pointer"
+                  :icon="hideSenha ? 'mdi-eye-off' : 'mdi-eye'"
+                  style="padding: 0 0.25rem;"
+                />
+              </template>
+            </v-text-field>
 
-            <v-btn type="submit" class="bg">acessar</v-btn>
+            <v-btn type="submit" >acessar</v-btn>
           </v-form>
         </v-card>
       </v-col>
@@ -73,17 +70,19 @@ function required(v: any) {
   </v-container>
 </template>
 <style scoped>
+h1{
+  text-align: center;
+  margin: 1rem 0;
+}
 #container {
   margin: auto;
   display: flex;
   width: 100%;
-  /* min-height: 100vh; */
 }
 #form {
   display: flex;
   flex-direction: column;
   margin: auto;
-  text-align: center;
   min-width: 300px;
   /* width: 340px; */
   padding: 0.5rem;
@@ -94,5 +93,6 @@ function required(v: any) {
 #form button {
   width: fit-content;
   margin: auto;
+  margin-top: 0.5rem;
 }
 </style>

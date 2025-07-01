@@ -76,7 +76,9 @@ button:focus-visible {
 .v-field__input {
   min-height: unset !important;
 }
-
+.v-field{
+  padding: 0 !important;
+}
 @media (prefers-color-scheme: light) {
  :root {
    color: #213547;
