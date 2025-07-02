@@ -46,23 +46,23 @@ function required(v: any) {
               v-model="formData.senha"
               label="Senha"
               name="senha"
-              :type="hideSenha ? 'text': 'password'"
+              :type="hideSenha ? 'text' : 'password'"
               :readonly="loading"
               :rules="[required]"
               required
-              style="padding: 0;"
+              style="padding: 0"
             >
               <template #append-inner>
                 <v-icon
                   @click="hideSenha = !hideSenha"
                   class="cursor-pointer"
                   :icon="hideSenha ? 'mdi-eye-off' : 'mdi-eye'"
-                  style="padding: 0 0.25rem;"
+                  style="padding: 0 0.25rem"
                 />
               </template>
             </v-text-field>
 
-            <v-btn type="submit" >acessar</v-btn>
+            <v-btn type="submit">acessar</v-btn>
           </v-form>
         </v-card>
       </v-col>
@@ -70,7 +70,7 @@ function required(v: any) {
   </v-container>
 </template>
 <style scoped>
-h1{
+h1 {
   text-align: center;
   margin: 1rem 0;
 }
