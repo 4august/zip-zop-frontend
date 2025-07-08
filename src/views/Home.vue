@@ -1,9 +1,33 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from "vue";
+import type { Profile } from "../interfaces/ProfileDto";
+import useProfile from "../services/useProfile";
+import logout from "../utils/logout";
 
-const count = ref(0)
+const profile = ref<Profile>();
+
+const fetchProfile = async () => {
+  try {
+    const result = await useProfile();
+    console.log(result)
+    profile.value = result;
+  } catch (err) {
+    console.error(err)
+  //  throw Error("Erro ao carregar dados do usuário")
+  }
+};
+
+onMounted(async () => {
+  await fetchProfile();
+});
 </script>
 <template>
-    <h1>fala zeze bom dia</h1>
-    <v-btn color="primary" @click="count++">Hello, world! {{ count }}</v-btn>
+  <div v-if="profile">
+
+    <h1>fala {{ profile.username }} bom dia</h1>
+  
+    <v-btn color="primary" width="fit-content" @click="logout($router)"
+      >deslogar</v-btn
+    >
+  </div>
 </template>
