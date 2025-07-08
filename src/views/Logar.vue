@@ -32,7 +32,7 @@ function required(v: any) {
     <v-row no-gutters>
       <v-col cols="4" style="margin: auto">
         <v-card>
-          <v-form id="form" v-model="form" @submit.prevent="onSubmit">
+          <v-form id="form" ref="form" @submit.prevent="onSubmit">
             <h1>Login</h1>
             <v-text-field
               v-model="formData.username"
